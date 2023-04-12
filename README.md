@@ -5,7 +5,7 @@ This is the repository to install Kafka/Zookeeper, EFK logging, Prometheus, Graf
 // ------------------ to install kafka service in the cluster -------------------
 
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
-$ helm install kafka bitnami/kafka
+$ helm install my-release bitnami/kafka
 
 
 // ------------------ to install elastic service in the cluster ----------------
@@ -21,13 +21,13 @@ kubectl port-forward service/elasticsearch 9200:9200
 
 // ---------------- to set up EFK logging stack for the cluster -------------------
 
+helm repo update  
 
-
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
+<!-- $ helm repo add bitnami https://charts.bitnami.com/bitnami
 $ helm install kibana bitnami/kibana \
   --set 'elasticsearch.hosts[0]=elasticsearch-coordinating-hl' \
   --set elasticsearch.port=9200 \
-  --set kibana.elasticsearch.security.tls.enabled=true
+  --set kibana.elasticsearch.security.tls.enabled=true -->
 
 helm install kibana bitnami/kibana \
   --set 'elasticsearch.hosts[0]=elasticsearch' \
@@ -51,4 +51,16 @@ $ kubectl apply -f fluentd-daemonset-elasticsearch.yaml
 kubectl apply -f counter.yaml
 
 
+
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+helm install prometheus prometheus-community/kube-prometheus-stack
+
+kubectl get services
+
+kubectl port-forward service/prometheus-operated 9090:9090
+
+kubectl port-forward service/prometheus-grafana 3000:80
 
